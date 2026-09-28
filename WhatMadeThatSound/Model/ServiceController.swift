@@ -86,25 +86,35 @@ final class ServiceController {
         guard !isChanging else { return }
         isChanging = true
         lastError = nil
+        let paths = self.paths
         Task {
-            do {
-                if enabled {
-                    try service.register()
-                    AgentFingerprint.rememberRegistration()
-                } else {
+            if enabled {
+                let outcome = await Task.detached { AgentLifecycle.enable(paths: paths) }.value
+                report(outcome)
+            } else {
+                do {
                     try await service.unregister()
                     AgentFingerprint.forgetRegistration()
-                }
-                logger.notice("Background agent \(enabled ? "registered" : "unregistered", privacy: .public)")
-            } catch {
-                logger.error("Could not \(enabled ? "register" : "unregister", privacy: .public) agent: \(error, privacy: .public)")
-                // Registering can "fail" only because approval is pending; the status says so.
-                if !(enabled && service.status == .requiresApproval) {
+                    logger.notice("Background agent unregistered")
+                } catch {
+                    logger.error("Could not unregister agent: \(error, privacy: .public)")
                     lastError = error.localizedDescription
                 }
             }
             isChanging = false
             refresh()
+        }
+    }
+
+    private func report(_ outcome: AgentLifecycle.Outcome) {
+        switch outcome {
+        case .running:
+            logger.notice("Background agent registered and running")
+        case .requiresApproval:
+            logger.notice("Background agent registered; waiting for approval")
+        case let .failed(message):
+            logger.error("Could not start background agent: \(message, privacy: .public)")
+            lastError = message
         }
     }
 
@@ -165,17 +175,10 @@ final class ServiceController {
     private func reregister() {
         guard !isChanging else { return }
         isChanging = true
+        let paths = self.paths
         Task {
-            do {
-                try? await service.unregister()
-                try service.register()
-                AgentFingerprint.rememberRegistration()
-            } catch where service.status == .requiresApproval {
-                AgentFingerprint.rememberRegistration()
-            } catch {
-                logger.error("Could not re-register agent: \(error, privacy: .public)")
-                lastError = error.localizedDescription
-            }
+            let outcome = await Task.detached { AgentLifecycle.reregister(paths: paths) }.value
+            report(outcome)
             isChanging = false
             refresh()
         }

@@ -13,6 +13,7 @@ Commands:
   status                Show whether the agent is running and summarize the log
   dump [--limit N]      Print logged events, oldest first (the last N if --limit is given)
   follow                Print events as they are recorded (Ctrl-C to stop)
+  clear                 Delete every recorded event (recording continues)
   generate-sample-log   Fill a log with synthetic events (requires --data-dir)
       [--events N]      Number of sessions to generate (default 2000)
       [--days N]        Spread them over the last N days (default 14)
@@ -250,6 +251,22 @@ func followLog(_ options: Options) -> Never {
     }
 }
 
+// MARK: - clear
+
+func clearLog(_ options: Options) {
+    do {
+        guard let log = try RingLog.openExisting(url: options.paths.logFile) else {
+            print("Nothing to clear: no log at \(options.paths.logFile.path)")
+            return
+        }
+        try log.clear()
+        DarwinNotification.post(AppConstants.logChangedNotification)
+        print("Cleared \(options.paths.logFile.path)")
+    } catch {
+        fail("cannot clear the log: \(error)")
+    }
+}
+
 // MARK: - generate-sample-log
 
 func generateSampleLog(_ options: Options) {
@@ -287,6 +304,8 @@ case "dump":
     dumpLog(options)
 case "follow":
     followLog(options)
+case "clear":
+    clearLog(options)
 case "generate-sample-log":
     generateSampleLog(options)
 default:

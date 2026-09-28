@@ -14,18 +14,13 @@ enum AgentRegistrationCommand {
             return 0
 
         case "--register-agent":
-            // Always start from scratch so launchd picks up this copy's agent binary.
-            try? service.unregister()
-            do {
-                try service.register()
-            } catch where service.status == .requiresApproval {
-                // Registered; macOS just wants the user to allow it.
-            } catch {
-                printError("could not register the agent: \(error.localizedDescription)")
+            // Always from scratch, so launchd picks up this copy's agent binary.
+            let outcome = AgentLifecycle.reregister()
+            UserDefaults.standard.set(true, forKey: ServiceController.didAutoRegisterKey)
+            if case let .failed(message) = outcome {
+                printError("could not register the agent: \(message)")
                 return 1
             }
-            AgentFingerprint.rememberRegistration()
-            UserDefaults.standard.set(true, forKey: ServiceController.didAutoRegisterKey)
             print(describe(service.status))
             return 0
 
