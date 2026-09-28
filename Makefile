@@ -11,7 +11,6 @@ APP_NAME    := What Made That Sound
 BUILD_APP   := build/$(APP_NAME).app
 INSTALL_DIR ?= /Applications
 INSTALLED   := $(INSTALL_DIR)/$(APP_NAME).app
-AGENT_LABEL := com.matthewy.WhatMadeThatSound.Agent
 
 .PHONY: all build test install uninstall status clean
 
@@ -23,11 +22,15 @@ build:
 test:
 	swift test --package-path Packages/WhatMadeThatSoundKit
 
+# The build copy is removed after installing: with ad-hoc signing, a second copy
+# of the app with the same bundle identifier can take over the agent's
+# registration. Opening the new copy re-registers the agent for its binary.
 install: build
+	@# Quit a running viewer so the new version is what opens (the agent keeps running).
+	-@pkill -f "$(INSTALLED)/Contents/MacOS/$(APP_NAME)" && sleep 1
 	@if [ -d "$(INSTALLED)" ]; then rm -rf "$(INSTALLED)"; fi
 	ditto "$(BUILD_APP)" "$(INSTALLED)"
-	@# If an older copy's agent is running, restart it from the new binary.
-	-launchctl kickstart -k "gui/$$(id -u)/$(AGENT_LABEL)" 2>/dev/null
+	rm -rf "$(BUILD_APP)"
 	open "$(INSTALLED)"
 
 uninstall:

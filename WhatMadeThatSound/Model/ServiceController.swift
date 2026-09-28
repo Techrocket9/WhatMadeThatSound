@@ -65,7 +65,9 @@ final class ServiceController {
             MainActor.assumeIsolated { self?.refresh() }
         }
         refresh()
-        registerOnFirstLaunchIfNeeded()
+        if !registerOnFirstLaunchIfNeeded() {
+            repairRegistrationIfNeeded()
+        }
     }
 
     func refresh() {
@@ -88,8 +90,10 @@ final class ServiceController {
             do {
                 if enabled {
                     try service.register()
+                    AgentFingerprint.rememberRegistration()
                 } else {
                     try await service.unregister()
+                    AgentFingerprint.forgetRegistration()
                 }
                 logger.notice("Background agent \(enabled ? "registered" : "unregistered", privacy: .public)")
             } catch {
@@ -121,16 +125,59 @@ final class ServiceController {
 
     /// Recording is the point of the app, so turn it on the first time the app runs.
     /// After that, the switch in Settings is the only thing that changes it.
-    private func registerOnFirstLaunchIfNeeded() {
+    /// Returns whether it registered.
+    private func registerOnFirstLaunchIfNeeded() -> Bool {
         let defaults = UserDefaults.standard
-        guard !defaults.bool(forKey: Self.didAutoRegisterKey) else { return }
-        guard registration != .unavailable else { return }
+        guard !defaults.bool(forKey: Self.didAutoRegisterKey) else { return false }
+        guard registration != .unavailable else { return false }
         // With WMTS_DATA_DIR set (development), the launchd agent would record
         // somewhere else entirely, so don't register it behind the developer's back.
-        guard paths == .standard(environment: [:]) else { return }
+        guard paths == .standard(environment: [:]) else { return false }
         defaults.set(true, forKey: Self.didAutoRegisterKey)
-        if registration == .disabled {
-            setEnabled(true)
+        guard registration == .disabled else { return false }
+        setEnabled(true)
+        return true
+    }
+
+    /// Keeps an enabled agent launchable after the app is updated or another copy
+    /// of it took over the registration (see `AgentFingerprint`).
+    private func repairRegistrationIfNeeded() {
+        guard registration == .enabled || registration == .requiresApproval,
+              paths == .standard(environment: [:])
+        else { return }
+        if AgentFingerprint.current != AgentFingerprint.registered {
+            logger.notice("This copy's agent differs from the registered one; registering again")
+            reregister()
+            return
+        }
+        // Registered and unchanged but not running: give launchd a moment (it may be
+        // starting it right now), then register again once.
+        guard registration == .enabled, runningAgent == nil else { return }
+        Task {
+            try? await Task.sleep(for: .seconds(3))
+            refresh()
+            guard registration == .enabled, runningAgent == nil else { return }
+            logger.notice("Agent is registered but not running; registering again")
+            reregister()
+        }
+    }
+
+    private func reregister() {
+        guard !isChanging else { return }
+        isChanging = true
+        Task {
+            do {
+                try? await service.unregister()
+                try service.register()
+                AgentFingerprint.rememberRegistration()
+            } catch where service.status == .requiresApproval {
+                AgentFingerprint.rememberRegistration()
+            } catch {
+                logger.error("Could not re-register agent: \(error, privacy: .public)")
+                lastError = error.localizedDescription
+            }
+            isChanging = false
+            refresh()
         }
     }
 }

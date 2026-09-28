@@ -14,6 +14,8 @@ enum AgentRegistrationCommand {
             return 0
 
         case "--register-agent":
+            // Always start from scratch so launchd picks up this copy's agent binary.
+            try? service.unregister()
             do {
                 try service.register()
             } catch where service.status == .requiresApproval {
@@ -22,6 +24,7 @@ enum AgentRegistrationCommand {
                 printError("could not register the agent: \(error.localizedDescription)")
                 return 1
             }
+            AgentFingerprint.rememberRegistration()
             UserDefaults.standard.set(true, forKey: ServiceController.didAutoRegisterKey)
             print(describe(service.status))
             return 0
@@ -36,6 +39,7 @@ enum AgentRegistrationCommand {
                 return 1
             }
             // An explicit "off" should stick: don't re-enable on the next launch.
+            AgentFingerprint.forgetRegistration()
             UserDefaults.standard.set(true, forKey: ServiceController.didAutoRegisterKey)
             print(describe(service.status))
             return 0
