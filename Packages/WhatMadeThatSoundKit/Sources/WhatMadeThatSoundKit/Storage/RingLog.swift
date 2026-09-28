@@ -166,6 +166,16 @@ public final class RingLog: @unchecked Sendable {
         }
     }
 
+    /// Opens an existing log for maintenance such as `clear()`, without creating it
+    /// or running crash recovery (the agent does that). `nil` if it doesn't exist.
+    public static func openExisting(url: URL) throws -> RingLog? {
+        do {
+            return try open(url: url, flags: O_RDWR)
+        } catch Error.posix(_, ENOENT) {
+            return nil
+        }
+    }
+
     private static func open(url: URL, flags: Int32) throws -> RingLog {
         let fd = url.withUnsafeFileSystemRepresentation { path in
             Darwin.open(path!, flags | O_CLOEXEC, 0o644)

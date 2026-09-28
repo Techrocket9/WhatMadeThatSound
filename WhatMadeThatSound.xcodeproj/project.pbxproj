@@ -1,0 +1,428 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D0000000000000000000010D /* WhatMadeThatSoundKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0000000000000000000010C /* WhatMadeThatSoundKit */; };
+		D0000000000000000000010E /* WhatMadeThatSoundAgent in Embed Agent */ = {isa = PBXBuildFile; fileRef = D00000000000000000000202 /* WhatMadeThatSoundAgent */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D0000000000000000000010F /* com.matthewy.WhatMadeThatSound.Agent.plist in Embed LaunchAgent */ = {isa = PBXBuildFile; fileRef = D00000000000000000000301 /* com.matthewy.WhatMadeThatSound.Agent.plist */; };
+		D0000000000000000000020A /* WhatMadeThatSoundKit in Frameworks */ = {isa = PBXBuildFile; productRef = D00000000000000000000209 /* WhatMadeThatSoundKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D00000000000000000000111 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D00000000000000000000201;
+			remoteInfo = WhatMadeThatSoundAgent;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D00000000000000000000107 /* Embed Agent */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				D0000000000000000000010E /* WhatMadeThatSoundAgent in Embed Agent */,
+			);
+			name = "Embed Agent";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00000000000000000000108 /* Embed LaunchAgent */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchAgents;
+			dstSubfolderSpec = 1;
+			files = (
+				D0000000000000000000010F /* com.matthewy.WhatMadeThatSound.Agent.plist in Embed LaunchAgent */,
+			);
+			name = "Embed LaunchAgent";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D00000000000000000000102 /* What Made That Sound.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "What Made That Sound.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00000000000000000000202 /* WhatMadeThatSoundAgent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WhatMadeThatSoundAgent; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00000000000000000000301 /* com.matthewy.WhatMadeThatSound.Agent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.matthewy.WhatMadeThatSound.Agent.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D00000000000000000000103 /* WhatMadeThatSound */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WhatMadeThatSound;
+			sourceTree = "<group>";
+		};
+		D00000000000000000000203 /* WhatMadeThatSoundAgent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WhatMadeThatSoundAgent;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D00000000000000000000105 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0000000000000000000010D /* WhatMadeThatSoundKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00000000000000000000205 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0000000000000000000020A /* WhatMadeThatSoundKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D00000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				D00000000000000000000103 /* WhatMadeThatSound */,
+				D00000000000000000000203 /* WhatMadeThatSoundAgent */,
+				D00000000000000000000004 /* LaunchAgents */,
+				D00000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D00000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D00000000000000000000102 /* What Made That Sound.app */,
+				D00000000000000000000202 /* WhatMadeThatSoundAgent */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D00000000000000000000004 /* LaunchAgents */ = {
+			isa = PBXGroup;
+			children = (
+				D00000000000000000000301 /* com.matthewy.WhatMadeThatSound.Agent.plist */,
+			);
+			path = LaunchAgents;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D00000000000000000000101 /* WhatMadeThatSound */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D00000000000000000000109 /* Build configuration list for PBXNativeTarget "WhatMadeThatSound" */;
+			buildPhases = (
+				D00000000000000000000104 /* Sources */,
+				D00000000000000000000105 /* Frameworks */,
+				D00000000000000000000106 /* Resources */,
+				D00000000000000000000107 /* Embed Agent */,
+				D00000000000000000000108 /* Embed LaunchAgent */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D00000000000000000000110 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D00000000000000000000103 /* WhatMadeThatSound */,
+			);
+			name = WhatMadeThatSound;
+			packageProductDependencies = (
+				D0000000000000000000010C /* WhatMadeThatSoundKit */,
+			);
+			productName = WhatMadeThatSound;
+			productReference = D00000000000000000000102 /* What Made That Sound.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D00000000000000000000201 /* WhatMadeThatSoundAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D00000000000000000000206 /* Build configuration list for PBXNativeTarget "WhatMadeThatSoundAgent" */;
+			buildPhases = (
+				D00000000000000000000204 /* Sources */,
+				D00000000000000000000205 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D00000000000000000000203 /* WhatMadeThatSoundAgent */,
+			);
+			name = WhatMadeThatSoundAgent;
+			packageProductDependencies = (
+				D00000000000000000000209 /* WhatMadeThatSoundKit */,
+			);
+			productName = WhatMadeThatSoundAgent;
+			productReference = D00000000000000000000202 /* WhatMadeThatSoundAgent */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					D00000000000000000000101 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					D00000000000000000000201 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+				};
+			};
+			buildConfigurationList = D00000000000000000000005 /* Build configuration list for PBXProject "WhatMadeThatSound" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D00000000000000000000002;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D00000000000000000000008 /* XCLocalSwiftPackageReference "Packages/WhatMadeThatSoundKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D00000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D00000000000000000000101 /* WhatMadeThatSound */,
+				D00000000000000000000201 /* WhatMadeThatSoundAgent */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D00000000000000000000106 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D00000000000000000000104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00000000000000000000204 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D00000000000000000000110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D00000000000000000000201 /* WhatMadeThatSoundAgent */;
+			targetProxy = D00000000000000000000111 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D00000000000000000000006 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		D00000000000000000000007 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		D0000000000000000000010A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "What Made That Sound";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthewy.WhatMadeThatSound;
+				PRODUCT_MODULE_NAME = WhatMadeThatSound;
+				PRODUCT_NAME = "What Made That Sound";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		D0000000000000000000010B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "What Made That Sound";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthewy.WhatMadeThatSound;
+				PRODUCT_MODULE_NAME = WhatMadeThatSound;
+				PRODUCT_NAME = "What Made That Sound";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		D00000000000000000000207 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthewy.WhatMadeThatSound.Agent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D00000000000000000000208 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matthewy.WhatMadeThatSound.Agent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D00000000000000000000005 /* Build configuration list for PBXProject "WhatMadeThatSound" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D00000000000000000000006 /* Debug */,
+				D00000000000000000000007 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D00000000000000000000109 /* Build configuration list for PBXNativeTarget "WhatMadeThatSound" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0000000000000000000010A /* Debug */,
+				D0000000000000000000010B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D00000000000000000000206 /* Build configuration list for PBXNativeTarget "WhatMadeThatSoundAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D00000000000000000000207 /* Debug */,
+				D00000000000000000000208 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D00000000000000000000008 /* XCLocalSwiftPackageReference "Packages/WhatMadeThatSoundKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/WhatMadeThatSoundKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0000000000000000000010C /* WhatMadeThatSoundKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D00000000000000000000008 /* XCLocalSwiftPackageReference "Packages/WhatMadeThatSoundKit" */;
+			productName = WhatMadeThatSoundKit;
+		};
+		D00000000000000000000209 /* WhatMadeThatSoundKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D00000000000000000000008 /* XCLocalSwiftPackageReference "Packages/WhatMadeThatSoundKit" */;
+			productName = WhatMadeThatSoundKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D00000000000000000000001 /* Project object */;
+}
