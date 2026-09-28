@@ -65,9 +65,15 @@ final class ServiceController {
             MainActor.assumeIsolated { self?.refresh() }
         }
         refresh()
+        #if DEBUG
+        // A development build (e.g. run from Xcode) is a second copy of the app;
+        // registering from it would take the agent over from the installed copy.
+        // Its Settings switch still registers explicitly.
+        #else
         if !registerOnFirstLaunchIfNeeded() {
             repairRegistrationIfNeeded()
         }
+        #endif
     }
 
     func refresh() {

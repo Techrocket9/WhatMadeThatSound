@@ -52,6 +52,7 @@
 		D00000000000000000000102 /* What Made That Sound.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "What Made That Sound.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00000000000000000000202 /* WhatMadeThatSoundAgent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WhatMadeThatSoundAgent; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00000000000000000000301 /* com.matthewy.WhatMadeThatSound.Agent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.matthewy.WhatMadeThatSound.Agent.plist; sourceTree = "<group>"; };
+		D00000000000000000000009 /* WhatMadeThatSoundKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WhatMadeThatSoundKit; path = Packages/WhatMadeThatSoundKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -90,6 +91,7 @@
 		D00000000000000000000002 = {
 			isa = PBXGroup;
 			children = (
+				D00000000000000000000009 /* WhatMadeThatSoundKit */,
 				D00000000000000000000103 /* WhatMadeThatSound */,
 				D00000000000000000000203 /* WhatMadeThatSoundAgent */,
 				D00000000000000000000004 /* LaunchAgents */,

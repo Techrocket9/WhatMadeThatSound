@@ -35,10 +35,14 @@ to turn it off or on again, see how much of the log is used, or clear the histor
 Recorded history lives in `~/Library/Application Support/WhatMadeThatSound/` and is
 kept when the app is uninstalled.
 
-You can also open `WhatMadeThatSound.xcodeproj` in Xcode. If `xcodebuild` reports that
-a plug-in failed to load, Xcode's first-launch components aren't installed yet: open
-Xcode once, or run `sudo xcodebuild -runFirstLaunch`. `make` doesn't need them; it
-builds with SwiftPM and assembles the bundle itself (`scripts/build-app.sh`).
+You can also open `WhatMadeThatSound.xcodeproj` in Xcode. The **WhatMadeThatSound**
+scheme builds the app with the agent embedded (Release builds are universal), ⌘U runs
+the package's tests, and the **WhatMadeThatSoundAgent** scheme runs the agent in the
+debugger with `run --verbose`. Debug builds never register or re-register the agent on
+their own, so running from Xcode doesn't take recording over from the installed copy;
+use the switch in Settings if you want a debug build to register it. `make` builds the
+same sources with SwiftPM and assembles the bundle itself (`scripts/build-app.sh`), so
+it also works before Xcode's first-launch components are installed.
 
 ### Signing
 
