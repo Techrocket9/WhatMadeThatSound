@@ -90,9 +90,13 @@ final class LogStore {
         let url = paths.logFile
         let position = self.position
         Task {
+            let started = ContinuousClock.now
             let result = await Task.detached(priority: .userInitiated) {
                 Result { try LogLoader.load(url: url, from: position) }
             }.value
+            if case let .success(loaded) = result, case let .full(assembler) = loaded.content {
+                logger.info("Loaded \(assembler.eventCount) events (\(assembler.sessions.count) sounds) in \(ContinuousClock.now - started, privacy: .public)")
+            }
             self.apply(result)
             self.isRefreshing = false
             if self.needsRefresh {

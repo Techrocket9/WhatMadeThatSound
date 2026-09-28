@@ -46,7 +46,7 @@ final class ServiceController {
     private var agentObservation: DarwinNotification.Observation?
     private var activationObserver: NSObjectProtocol?
     private let logger = Logger(subsystem: AppConstants.loggingSubsystem, category: "service")
-    private static let didAutoRegisterKey = "didRegisterAgentOnFirstLaunch"
+    nonisolated static let didAutoRegisterKey = "didRegisterAgentOnFirstLaunch"
 
     init(paths: AppPaths = .standard()) {
         self.paths = paths

@@ -179,7 +179,7 @@ func printStatus(_ options: Options) {
             print("           (no log yet)")
             return
         }
-        let byteFormat = ByteCountFormatStyle(style: .file)
+        let byteFormat = ByteCountFormatStyle(style: .memory)
         print("Used:      \(stats.usedBytes.formatted(byteFormat)) of \(stats.capacity.formatted(byteFormat))")
         print("Records:   \(stats.recordCount)")
     } catch {
