@@ -29,37 +29,41 @@ struct SessionListView: View {
     }
 
     private func table(sortOrder: Binding<[KeyPathComparator<AudioSession>]>) -> some View {
-        Table(store.displayedSessions, selection: $selection, sortOrder: sortOrder) {
+        // Cells get plain values rather than reading the environment themselves:
+        // table cells are hosted separately and must not depend on it.
+        let showsDates = showsDates
+        let isRecording = service.isRecording
+        return Table(store.displayedSessions, selection: $selection, sortOrder: sortOrder) {
             TableColumn("Started", value: \.start) { session in
                 StartCell(session: session, showsDate: showsDates)
             }
-            .width(min: 80, ideal: showsDates ? 170 : 95)
+            .width(min: 80, ideal: showsDates ? 150 : 90)
 
             TableColumn("Ended", value: \.sortableEnd) { session in
-                EndCell(session: session, showsDate: showsDates)
+                EndCell(session: session, isRecording: isRecording)
             }
-            .width(min: 80, ideal: showsDates ? 170 : 95)
+            .width(min: 80, ideal: 90)
 
             TableColumn("Duration", value: \.sortableDuration) { session in
-                DurationCell(session: session)
+                DurationCell(session: session, isRecording: isRecording)
             }
-            .width(min: 60, ideal: 80)
+            .width(min: 60, ideal: 75)
 
             TableColumn("Application", value: \.source.displayName) { session in
                 ApplicationCell(identity: session.source.identity)
             }
-            .width(min: 120, ideal: 190)
+            .width(min: 120, ideal: 170)
 
             TableColumn("Process", value: \.source.identity.processName) { session in
                 Text(session.processDescription)
                     .help(session.source.identity.executablePath ?? session.source.identity.processName)
             }
-            .width(min: 100, ideal: 200)
+            .width(min: 100, ideal: 180)
 
             TableColumn("Output Device", value: \.devices.displayName) { session in
                 Text(session.devices.displayName)
             }
-            .width(min: 100, ideal: 170)
+            .width(min: 100, ideal: 150)
         }
         .contextMenu(forSelectionType: AudioSession.ID.self) { ids in
             contextMenu(for: ids)
@@ -145,25 +149,29 @@ private struct StartCell: View {
 
     var body: some View {
         let approximate = session.flags.contains(.alreadyPlayingAtMonitorStart)
-        Text((approximate ? "≤ " : "") + Formatting.time(session.start, includingDate: showsDate))
+        let time = showsDate ? Formatting.dayAndTime(session.start) : Formatting.time(session.start)
+        Text((approximate ? "≤ " : "") + time)
             .monospacedDigit()
             .help(approximate ? "Already playing when recording started, so it may have started earlier." : "")
     }
 }
 
 private struct EndCell: View {
-    @Environment(ServiceController.self) private var service
     let session: AudioSession
-    let showsDate: Bool
+    let isRecording: Bool
 
     var body: some View {
         switch session.status {
         case .ended:
+            let end = session.end ?? session.start
             let cutShort = session.flags.contains(.monitorStopped)
-            Text((cutShort ? "≥ " : "") + Formatting.time(session.end ?? session.start, includingDate: showsDate))
+            // Only repeat the date when the sound ran past midnight.
+            let time = Calendar.current.isDate(end, inSameDayAs: session.start)
+                ? Formatting.time(end) : Formatting.dayAndTime(end)
+            Text((cutShort ? "≥ " : "") + time)
                 .monospacedDigit()
                 .help(cutShort ? "Recording stopped at this time; the sound may have continued." : "")
-        case .open where service.isRecording:
+        case .open where isRecording:
             Label("Playing", systemImage: "speaker.wave.2.fill")
                 .symbolEffect(.variableColor.iterative, options: .repeating)
                 .foregroundStyle(.tint)
@@ -176,14 +184,14 @@ private struct EndCell: View {
 }
 
 private struct DurationCell: View {
-    @Environment(ServiceController.self) private var service
     let session: AudioSession
+    let isRecording: Bool
 
     var body: some View {
         if let duration = session.duration {
             Text(Formatting.duration(duration))
                 .monospacedDigit()
-        } else if session.status == .open, service.isRecording {
+        } else if session.status == .open, isRecording {
             Text(timerInterval: session.start ... Date.distantFuture, countsDown: false)
                 .monospacedDigit()
                 .foregroundStyle(.tint)

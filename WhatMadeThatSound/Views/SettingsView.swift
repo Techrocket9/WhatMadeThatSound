@@ -60,6 +60,7 @@ struct SettingsView: View {
         } footer: {
             Text("A small background agent starts when you log in and notes whenever an app starts or stops playing sound, even while this window is closed. It never records the audio itself.")
                 .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -121,6 +122,7 @@ struct SettingsView: View {
         } footer: {
             Text("The most recent \(Formatting.bytes(store.stats?.capacity ?? AppConstants.defaultLogCapacity)) of events are kept; older ones are discarded automatically.")
                 .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

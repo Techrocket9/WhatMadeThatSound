@@ -17,6 +17,9 @@ struct WhatMadeThatSoundApp: App {
                 .task {
                     store.start()
                     service.start()
+                    #if DEBUG
+                    DebugSnapshot.runIfRequested(store: store)
+                    #endif
                 }
         }
         .defaultSize(width: 1100, height: 660)

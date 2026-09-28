@@ -3,6 +3,7 @@ import WhatMadeThatSoundKit
 
 struct ContentView: View {
     @Environment(LogStore.self) private var store
+    @Environment(ServiceController.self) private var service
     @State private var selectedSessionIDs = Set<AudioSession.ID>()
     @State private var showsInspector = false
 
@@ -19,7 +20,7 @@ struct ContentView: View {
                 }
             }
             .inspector(isPresented: $showsInspector) {
-                SessionInspector(session: selectedSession)
+                SessionInspector(session: selectedSession, isRecording: service.isRecording)
                     .inspectorColumnWidth(min: 260, ideal: 300, max: 420)
             }
         }

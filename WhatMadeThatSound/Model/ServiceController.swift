@@ -72,8 +72,9 @@ final class ServiceController {
         switch service.status {
         case .enabled: registration = .enabled
         case .requiresApproval: registration = .requiresApproval
-        case .notRegistered: registration = .disabled
-        case .notFound: registration = .unavailable
+        // `.notFound` is also what an agent that was never registered reports, so
+        // only call it unavailable if the bundle really lacks the agent.
+        case .notRegistered, .notFound: registration = Self.bundleContainsAgent ? .disabled : .unavailable
         @unknown default: registration = .disabled
         }
         runningAgent = AgentInstanceLock.currentOwner(at: paths.agentLockFile)
@@ -101,6 +102,17 @@ final class ServiceController {
             isChanging = false
             refresh()
         }
+    }
+
+    /// Whether this copy of the app carries the agent and its LaunchAgent plist
+    /// (it doesn't when run as a bare executable, e.g. from `swift run`).
+    private static var bundleContainsAgent: Bool {
+        let contents = Bundle.main.bundleURL.appending(path: "Contents")
+        let files = [
+            contents.appending(path: "Library/LaunchAgents/\(AppConstants.agentPlistName)"),
+            contents.appending(path: "MacOS/\(AppConstants.agentExecutableName)"),
+        ]
+        return files.allSatisfy { FileManager.default.fileExists(atPath: $0.path) }
     }
 
     func openLoginItemsSettings() {

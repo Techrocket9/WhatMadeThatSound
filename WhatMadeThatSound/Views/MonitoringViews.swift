@@ -12,8 +12,11 @@ struct MonitoringBanner: View {
                     Image(systemName: content.symbol)
                         .foregroundStyle(content.tint)
                         .imageScale(.large)
+                    // No fixedSize here: probed at zero width it would report a
+                    // one-character-per-line height and stretch the whole window.
                     Text(content.message)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(3)
+                        .layoutPriority(1)
                     Spacer(minLength: 8)
                     content.action
                 }

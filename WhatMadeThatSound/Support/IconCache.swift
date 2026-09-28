@@ -14,7 +14,7 @@ enum IconCache {
         if !path.isEmpty, FileManager.default.fileExists(atPath: path) {
             icon = NSWorkspace.shared.icon(forFile: path)
         } else if identity.appPath != nil {
-            icon = NSWorkspace.shared.icon(for: .application)
+            icon = NSWorkspace.shared.icon(for: .applicationBundle)
         } else {
             icon = NSWorkspace.shared.icon(for: .unixExecutable)
         }

@@ -3,8 +3,8 @@ import WhatMadeThatSoundKit
 
 /// Everything known about one sound: when, which process, which app, which device.
 struct SessionInspector: View {
-    @Environment(ServiceController.self) private var service
     let session: AudioSession?
+    let isRecording: Bool
 
     var body: some View {
         if let session {
@@ -102,7 +102,7 @@ struct SessionInspector: View {
         case .ended:
             let end = precise(session.end ?? session.start)
             return session.flags.contains(.monitorStopped) ? String(localized: "\(end) (recording stopped)") : end
-        case .open where service.isRecording:
+        case .open where isRecording:
             return String(localized: "Still playing")
         case .open, .interrupted:
             return String(localized: "Unknown")

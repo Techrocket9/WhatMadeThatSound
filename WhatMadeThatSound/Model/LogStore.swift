@@ -43,7 +43,8 @@ final class LogStore {
     }
 
     var sortOrder: [KeyPathComparator<AudioSession>] = [KeyPathComparator(\.start, order: .reverse)] {
-        didSet { updateDisplayedSessions() }
+        // The table writes this back while it sets up; re-sorting then would reload it re-entrantly.
+        didSet { if sortOrder != oldValue { updateDisplayedSessions() } }
     }
 
     /// Showing hundreds of thousands of rows at once helps no one; pick a day to see more.
