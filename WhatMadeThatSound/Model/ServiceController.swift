@@ -113,6 +113,9 @@ final class ServiceController {
         let defaults = UserDefaults.standard
         guard !defaults.bool(forKey: Self.didAutoRegisterKey) else { return }
         guard registration != .unavailable else { return }
+        // With WMTS_DATA_DIR set (development), the launchd agent would record
+        // somewhere else entirely, so don't register it behind the developer's back.
+        guard paths == .standard(environment: [:]) else { return }
         defaults.set(true, forKey: Self.didAutoRegisterKey)
         if registration == .disabled {
             setEnabled(true)

@@ -76,30 +76,11 @@ func parseOptions(_ arguments: [String]) -> Options {
     return options
 }
 
-let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
-let options = parseOptions(Array(CommandLine.arguments.dropFirst()))
-
-switch options.command {
-case "run":
-    runAgent(options)
-case "status":
-    printStatus(options)
-case "dump":
-    dumpLog(options)
-case "follow":
-    followLog(options)
-case "generate-sample-log":
-    generateSampleLog(options)
-default:
-    fail("unknown command \(options.command)\n\n\(usage)")
-}
-
 // MARK: - run
+//
+// Note: after `dispatchMain()` the main queue is serviced by a pool thread, not the
+// main thread, so nothing below relies on main-actor isolation.
 
-/// Kept alive for the life of the process.
-var signalSources: [DispatchSourceSignal] = []
-
-@MainActor
 func runAgent(_ options: Options) -> Never {
     let logger = Logger(subsystem: AppConstants.loggingSubsystem, category: "agent")
     let paths = options.paths
@@ -151,10 +132,11 @@ func runAgent(_ options: Options) -> Never {
     }
     let monitor = AudioActivityMonitor(sink: recorder, options: .init(note: "agent \(version), pid \(getpid())"))
 
+    var signalSources: [DispatchSourceSignal] = []
     for signalNumber in [SIGTERM, SIGINT, SIGHUP] {
         signal(signalNumber, SIG_IGN)
         let source = DispatchSource.makeSignalSource(signal: signalNumber, queue: .main)
-        source.setEventHandler {
+        source.setEventHandler { @Sendable in
             logger.notice("Received signal \(signalNumber); stopping")
             monitor.stop()
             recorder.flush()
@@ -173,7 +155,9 @@ func runAgent(_ options: Options) -> Never {
     if verbose {
         print("Recording to \(paths.logFile.path). Press Ctrl-C to stop.")
     }
-    dispatchMain()
+    withExtendedLifetime((signalSources, monitor, recorder, instanceLock)) {
+        dispatchMain()
+    }
 }
 
 // MARK: - status / dump / follow
@@ -232,11 +216,9 @@ func dumpLog(_ options: Options) {
 }
 
 /// Prints new events each time the agent announces a write. Main queue only.
-@MainActor
-final class Follower {
+final class Follower: @unchecked Sendable {
     let url: URL
     var position: RingLog.Position?
-    var observation: DarwinNotification.Observation?
 
     init(url: URL) {
         self.url = url
@@ -257,17 +239,15 @@ final class Follower {
     }
 }
 
-var follower: Follower?
-
-@MainActor
 func followLog(_ options: Options) -> Never {
-    let newFollower = Follower(url: options.paths.logFile)
-    newFollower.printNew(limit: options.limit ?? 10)
-    newFollower.observation = DarwinNotification.Observation(name: AppConstants.logChangedNotification, queue: .main) {
-        MainActor.assumeIsolated { newFollower.printNew(limit: nil) }
+    let follower = Follower(url: options.paths.logFile)
+    follower.printNew(limit: options.limit ?? 10)
+    let observation = DarwinNotification.Observation(name: AppConstants.logChangedNotification, queue: .main) {
+        follower.printNew(limit: nil)
     }
-    follower = newFollower
-    dispatchMain()
+    withExtendedLifetime((follower, observation)) {
+        dispatchMain()
+    }
 }
 
 // MARK: - generate-sample-log
@@ -289,4 +269,26 @@ func generateSampleLog(_ options: Options) {
     } catch {
         fail("\(error)")
     }
+}
+
+// MARK: - Entry point
+// Last in the file: top-level globals above are initialized in order, and the
+// commands that never return would otherwise leave later globals uninitialized.
+
+let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
+let options = parseOptions(Array(CommandLine.arguments.dropFirst()))
+
+switch options.command {
+case "run":
+    runAgent(options)
+case "status":
+    printStatus(options)
+case "dump":
+    dumpLog(options)
+case "follow":
+    followLog(options)
+case "generate-sample-log":
+    generateSampleLog(options)
+default:
+    fail("unknown command \(options.command)\n\n\(usage)")
 }
