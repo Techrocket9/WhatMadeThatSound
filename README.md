@@ -198,3 +198,7 @@ Package.swift, scripts/     command-line build of the same sources
   window there, and quits.
 - Logs: `log stream --level info --predicate 'subsystem == "com.matthewy.WhatMadeThatSound"'`.
 - Run the agent in a terminal: `WhatMadeThatSoundAgent run --verbose --data-dir /tmp/wmts`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
