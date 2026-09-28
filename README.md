@@ -43,10 +43,11 @@ builds with SwiftPM and assembles the bundle itself (`scripts/build-app.sh`).
 ### Signing
 
 Builds are ad-hoc signed by default, which is fine on the Mac that built them. With an
-ad-hoc signature, launchd pins the registered agent to the exact binary it saw at
-registration, so after installing a new build the agent can't start until the app
-registers it again. The app does this by itself the next time it's opened (`make
-install` opens it for you). Signing with a Developer ID avoids the issue entirely:
+ad-hoc signature, macOS pins the registered agent to the exact binary it saw at
+registration, so after installing a build whose agent changed, launchd refuses to start
+it until the registration is renewed. The app does this by itself when it's opened
+(`make install` opens it for you); it takes about 15 seconds, and macOS may show a
+"background item added" notification. Signing with a Developer ID avoids the issue:
 
 ```sh
 make SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)"
